@@ -6,10 +6,10 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        File loadFile = new File("basket.bin");
+        File loadFile = new File("basket.json");
         Basket shopCart = null;
         if (loadFile.exists()) {
-            shopCart = Basket.loadFromBinFile(loadFile);
+            shopCart = Basket.loadFromJsonFile(loadFile);
         } else {
             shopCart = new Basket(new String[]{"Хлеб", "Молоко", "Сахар", "Яблоки", "Чай"}, new int[]{40, 80, 70, 110, 300});
         }
@@ -18,7 +18,7 @@ public class Main {
         shopCart.addToCart(2, 1);
         shopCart.addToCart(3, 10);
         shopCart.addToCart(4, 1);
-        shopCart.saveBin(new File ("basket.bin"));
+        shopCart.saveJson(new File ("basket.json"));
         shopCart.printCart();
     }
 }
