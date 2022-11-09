@@ -1,10 +1,8 @@
 package ru.netology;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Scanner;
 
-public class Basket {
+public class Basket implements Serializable {
 
     protected String[] products;
     protected int[] prices;
@@ -14,12 +12,6 @@ public class Basket {
         this.products = products;
         this.prices = prices;
         cart = new int[products.length];
-    }
-
-    private Basket(String[] products, int[] prices, int[] cart) {
-        this.products = products;
-        this.prices = prices;
-        this.cart = cart;
     }
 
     public String[] getProducts() {
@@ -47,33 +39,15 @@ public class Basket {
         }
     }
 
-    public void saveTxt(File textFile) throws FileNotFoundException {
-        try (PrintWriter out = new PrintWriter(textFile)) {
-            for (int i : getCart()) {
-                out.print(i + " ");
-            }
-            out.println(" ");
-            for (String product : getProducts()) {
-                out.print(product + " ");
-            }
-            out.println(" ");
-            for (int price : getPrices()) {
-                out.print(price + " ");
-            }
-            out.println(" ");
+    public void saveBin(File binFile) throws IOException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(binFile))) {
+            out.writeObject(this);
         }
     }
 
-    public static Basket loadFromTxtFile(File textFile) throws FileNotFoundException {
-        try (Scanner scanner = new Scanner(new FileInputStream(textFile))) {
-            String[] products = scanner.nextLine().trim().split(" ");
-            int[] prices = Arrays.stream(scanner.nextLine().trim().split(" "))
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-            int[] cart = Arrays.stream(scanner.nextLine().trim().split(" "))
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-            return new Basket(products, prices, cart);
+    public static Basket loadFromBinFile(File binFile) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(binFile))) {
+            return (Basket) in.readObject();
         }
     }
 }
